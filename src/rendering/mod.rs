@@ -75,6 +75,7 @@ impl WindowView {
 impl Device {
     pub fn new(event_loop: &EventLoop<()>, extensions: Vec<&str>) -> Result<Self, VulkanError> {
         // Need this to prevent use after free later on when using as a *const c_char
+        // There is probably a way to pre-allocate the following two Vec<> as the capacity is a known quantity; not sure if using a map does a preallocation. I assume not.
         let extensions_cstr = extensions.iter().map(|&s| CString::new(s).unwrap()).collect::<Vec<_>>();
         let mut extensions_raw = extensions_cstr.iter().map(|s| s.as_ptr()).collect::<Vec<_>>();
         extensions_raw.append(&mut ash_window::enumerate_required_extensions(event_loop.display_handle()?.as_raw())?
