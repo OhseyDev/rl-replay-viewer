@@ -1,15 +1,11 @@
 mod content;
 mod rendering;
 
-use winit::{
-    event::{WindowEvent},
-    event_loop::EventLoop,
-    window::Window
-};
 use winit::application::ApplicationHandler;
 use winit::event::{DeviceEvent, DeviceId, StartCause};
 use winit::event_loop::{ActiveEventLoop, ControlFlow};
 use winit::window::{WindowAttributes, WindowId};
+use winit::{event::WindowEvent, event_loop::EventLoop, window::Window};
 
 struct App {
     device: rendering::Device,
@@ -18,7 +14,10 @@ struct App {
 
 impl App {
     fn new(event_loop: &EventLoop<()>) -> Self {
-        let device = rendering::Device::new(event_loop, vec![]).expect("Failed to setup Vulkan - Aborting!");
+        let instance_ext = vec![];
+        let device_ext = vec![];
+        let device = rendering::Device::new(event_loop, instance_ext, device_ext)
+            .expect("Failed to setup Vulkan - Aborting!");
         Self { device, view: None }
     }
 }
@@ -29,8 +28,11 @@ impl ApplicationHandler for App {
     }
 
     fn resumed(&mut self, event_loop: &ActiveEventLoop) {
-        if let Some(_) = &self.view { return; }
-        let view = rendering::WindowView::new(event_loop, &mut self.device).expect("Failed to setup Vulkan - Aborting!");
+        if let Some(_) = &self.view {
+            return;
+        }
+        let view = rendering::WindowView::new(event_loop, &mut self.device)
+            .expect("Failed to setup Vulkan - Aborting!");
         self.view = Some(view);
     }
 
@@ -38,11 +40,21 @@ impl ApplicationHandler for App {
         todo!()
     }
 
-    fn window_event(&mut self, event_loop: &ActiveEventLoop, window_id: WindowId, event: WindowEvent) {
+    fn window_event(
+        &mut self,
+        event_loop: &ActiveEventLoop,
+        window_id: WindowId,
+        event: WindowEvent,
+    ) {
         todo!()
     }
 
-    fn device_event(&mut self, event_loop: &ActiveEventLoop, device_id: DeviceId, event: DeviceEvent) {
+    fn device_event(
+        &mut self,
+        event_loop: &ActiveEventLoop,
+        device_id: DeviceId,
+        event: DeviceEvent,
+    ) {
         todo!()
     }
 
